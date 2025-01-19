@@ -1,9 +1,7 @@
-// Store initial values and history
-let totalAmount = 98600; // Initial amount in BDT
+let totalAmount = 98600;
 let donationHistory = [];
-let cardAmounts = [0, 0, 0]; // Track amounts for each card
+let cardAmounts = [0, 0, 0];
 
-// Get DOM elements
 document.addEventListener('DOMContentLoaded', () => {
     const totalAmountDisplay = document.querySelector('.navbar-end h3 span');
     const donationInputs = document.querySelectorAll('.card input[type="number"]');
@@ -11,16 +9,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const historyButton = document.querySelector('button:not(.bg-lime-400)');
     const donationButton = document.querySelector('button.bg-lime-400:not(.card .btn)');
     
-    // Update total amount display
     totalAmountDisplay.textContent = totalAmount;
 
-    // Add event listeners to donate buttons
+    
     donateButtons.forEach((button, index) => {
         button.addEventListener('click', () => {
             const input = donationInputs[index];
             const amount = parseInt(input.value);
             
-            // Validate input
             if (!amount || amount <= 0) {
                 alert('Please enter a valid donation amount');
                 return;
@@ -31,15 +27,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             
-            // Process donation
             makeDonation(amount, index);
             
-            // Clear input
             input.value = '';
         });
     });
     
-    // Add event listeners to navigation buttons
     if (historyButton) {
         historyButton.addEventListener('click', () => showPage('history'));
     }
@@ -47,24 +40,18 @@ document.addEventListener('DOMContentLoaded', () => {
         donationButton.addEventListener('click', () => showPage('donation'));
     }
 
-    // Update card amounts display
     updateCardAmounts();
 });
 
-// Function to process donation
 function makeDonation(amount, cardIndex) {
-    // Get card title
     const cardTitle = document.querySelectorAll('.card-title')[cardIndex].textContent;
     
-    // Update total amount
     totalAmount -= amount;
     document.querySelector('.navbar-end h3 span').textContent = totalAmount;
     
-    // Update card amount
     cardAmounts[cardIndex] += amount;
     updateCardAmounts();
-    
-    // Add to history
+
     const date = new Date().toLocaleString('en-US', {
         timeZone: 'Asia/Dhaka',
         year: 'numeric',
@@ -82,11 +69,9 @@ function makeDonation(amount, cardIndex) {
         date: date
     });
     
-    // Save to localStorage
     saveToStorage();
 }
 
-// Function to update card amounts display
 function updateCardAmounts() {
     const cardAmountDisplays = document.querySelectorAll('.card .btn span');
     cardAmountDisplays.forEach((display, index) => {
@@ -96,14 +81,12 @@ function updateCardAmounts() {
     });
 }
 
-// Function to save data to localStorage
 function saveToStorage() {
     localStorage.setItem('donationHistory', JSON.stringify(donationHistory));
     localStorage.setItem('totalAmount', totalAmount);
     localStorage.setItem('cardAmounts', JSON.stringify(cardAmounts));
 }
 
-// Function to show specified page
 function showPage(page) {
     if (page === 'history') {
         const historyHTML = `
@@ -168,9 +151,7 @@ function showPage(page) {
     }
 }
 
-// Function to generate history items HTML
 function generateHistoryItems() {
-    // Load history from localStorage
     const savedHistory = localStorage.getItem('donationHistory');
     const history = savedHistory ? JSON.parse(savedHistory) : [];
     
@@ -184,9 +165,6 @@ function generateHistoryItems() {
     `).join('');
 }
 
-// Rest of the previous code remains the same until the showPage function
-
-// Function to show specified page
 function showPage(page) {
   if (page === 'history') {
       const historyHTML = `
@@ -246,10 +224,6 @@ function showPage(page) {
       document.close();
   }
 }
-
-// Rest of the previous code remains the same
-
-// Load saved data on page load
 window.addEventListener('load', () => {
     const savedAmount = localStorage.getItem('totalAmount');
     const savedHistory = localStorage.getItem('donationHistory');
